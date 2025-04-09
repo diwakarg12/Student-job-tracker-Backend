@@ -1,0 +1,12 @@
+{
+  "name": "student-job-tracker-backend",
+  "version": "1.0.0",
+  "description": "Server side code of Student Job Tracker.",
+  "license": "ISC",
+  "author": "Diwakar Giri",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
