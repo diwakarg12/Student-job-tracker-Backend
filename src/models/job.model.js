@@ -10,10 +10,18 @@ const jobSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    salary: {
+        type: String,
+        required: true
+    },
+    location: {
+        type: String,
+        required: true
+    },
     status: {
         type: String,
         enum: ['Applied', 'Interview', 'Offer', 'Rejected'],
-        required: true
+        required: true,
     },
     dateOfApplication: {
         type: Date,

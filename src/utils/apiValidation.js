@@ -2,17 +2,15 @@ const express = require('express');
 const validator = require('validator');
 
 const signupValidation = (data) => {
-    const { firstName, lastName, email, password, age, gender } = data;
+    const { name, email, password, age, gender } = data;
     const allowedGender = ['male', 'female', 'other'];
-    if (!validator.isLength(firstName, { min: 3, max: 20 })) {
+    if (!validator.isLength(name, { min: 3, max: 20 })) {
         throw new Error("FirstName should be between 3 to 20 Characters");
-    } else if (!validator.isLength(lastName, { min: 3, max: 20 })) {
-        throw new Error("lastName should be between 3 to 20 Characters");
     } else if (!validator.isEmail(email)) {
         throw new Error("Email is not Valid");
     } else if (!validator.isStrongPassword(password)) {
         throw new Error("password is not Valid");
-    } else if (!validator.isInt(data.age.toString(), { min: 18 })) {
+    } else if (!validator.isInt(age.toString(), { min: 18 })) {
         throw new Error("Use should be more than 18 yrs old");
     } else if (!allowedGender.includes(gender)) {
         throw new Error("Gender is not Valid");
@@ -37,7 +35,7 @@ function isValidImageUrlOrBase64(str) {
 };
 
 const updateValidation = (data) => {
-    const updatable = ["firstName", "lastName", "gender", "age", "about", "skills", "profileUrl"];
+    const updatable = ["name", "gender", "age", "profileUrl"];
 
     const isUpdatable = Object.keys(data).every(req => updatable.includes(req))
     if (!isUpdatable) {
@@ -64,13 +62,15 @@ const updatePasswordValidation = (password) => {
 };
 
 const applyJob = (data) => {
-    const { company, role, status } = data;
+    const { company, role, salary, location } = data;
 
     if (!validator.isLength(company, { min: 3, max: 20 })) {
         throw new Error('company Name should be between 3 to 20 Characters')
     } else if (!validator.isLength(role, { min: 3, max: 20 })) {
         throw new Error('Role should be between 3 to 20 Characters');
-    } else if (!validator.isLength(status, { min: 3, max: 20 })) {
+    } else if (!validator.isLength(salary, { min: 3, max: 20 })) {
+        throw new Error('Status should be between 3 to 20 Characters');
+    } else if (!validator.isLength(location, { min: 3, max: 20 })) {
         throw new Error('Status should be between 3 to 20 Characters');
     }
 };

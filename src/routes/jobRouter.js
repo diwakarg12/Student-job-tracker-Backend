@@ -7,23 +7,26 @@ const jobRouter = express.Router();
 
 jobRouter.post('/apply', userAuth, async (req, res) => {
     try {
+        console.log('Log1');
         applyJob(req.body);
-        const { company, role } = req.body;
+        const { company, role, salary, location } = req.body;
         const loggedInUser = req.user;
         if (!loggedInUser) {
             return res.status(404).json({ message: 'Unable to get LoggedIn User Data, Please Login Again' });
         }
-
+        console.log('Log2');
         const appliedJob = new Job({
             company: company,
             role: role,
             status: "Applied",
+            salary: salary,
+            location: location,
             user: loggedInUser._id
         });
 
         await appliedJob.save();
-
-        res.status(200).json({ message: `You have SuccessFully to ${company} for ${role} role`, job: appliedJob });
+        console.log('Log3');
+        res.status(200).json({ message: `You have SuccessFully Applied to ${company} for ${role} role`, job: appliedJob });
 
     } catch (error) {
         res.status(500).json({ message: "Error", error: error.message });

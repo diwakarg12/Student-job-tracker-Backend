@@ -42,7 +42,7 @@ profileRouter.patch('/edit', userAuth, async (req, res) => {
 
         await currentUser.save();
 
-        res.status(200).json({ message: `${currentUser.firstName} Your profile is updated user Successfully`, user: currentUser })
+        res.status(200).json({ message: `${currentUser.name} Your profile is updated user Successfully`, user: currentUser })
     } catch (error) {
         res.status(500).json({ message: "Error", error: error.message });
     }
@@ -59,7 +59,7 @@ profileRouter.patch('/change-password', userAuth, async (req, res) => {
         currentUser.password = passwordHash;
         await currentUser.save();
 
-        res.status(200).json({ message: `${currentUser.firstName}, Your Password has been changed successfully!`, user: currentUser })
+        res.status(200).json({ message: `${currentUser.name}, Your Password has been changed successfully!`, user: currentUser })
 
     } catch (error) {
         res.status(500).json({ message: "Error", error: error.message });
