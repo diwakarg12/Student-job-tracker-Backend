@@ -23,50 +23,68 @@ profileRouter.get('/view', userAuth, async (req, res) => {
 
 profileRouter.patch('/edit', userAuth, async (req, res) => {
     try {
+        // Validate the request body data
+        const { name, age, gender, profile } = req.body;
 
-        updateValidation(req.body)
-        const currentUser = req.user;
-        const { profileUrl } = req.body;
-        if (profileUrl && profileUrl.startsWith("data:image")) {
+        if (!name || !age || !gender) {
+            return res.status(400).json({ message: "Name, Age, and Gender are required" });
+        }
+
+        // If the profile image starts with data:image (base64), we handle it
+        if (profile && profile.startsWith("data:image")) {
             try {
-                const uploadResponse = await cloudinary.uploader.upload(profileUrl);
-                req.body.profileUrl = uploadResponse.secure_url
-                console.log('public url', req.body.profileUrl)
+                const uploadResponse = await cloudinary.uploader.upload(profile);
+                req.body.profile = uploadResponse.secure_url; // Update profile with the URL
             } catch (error) {
-                return res.status(400).json({ message: "Error while uploading the file" })
+                return res.status(400).json({ message: "Error while uploading the profile image" });
             }
         }
-        console.log(currentUser);
-        Object.keys(req.body).forEach(key => currentUser[key] = req.body[key]);
-        console.log(currentUser);
 
+        // Retrieve the current user
+        const currentUser = req.user;
+        Object.keys(req.body).forEach(key => {
+            if (key !== 'profile' || req.body.profile) { // Avoid updating profile if it's not provided
+                currentUser[key] = req.body[key];
+            }
+        });
+
+        // Save the updated user data
         await currentUser.save();
-
-        res.status(200).json({ message: `${currentUser.name} Your profile is updated user Successfully`, user: currentUser })
+        res.status(200).json({ message: `${currentUser.name} Your profile is updated successfully`, user: currentUser });
     } catch (error) {
-        res.status(500).json({ message: "Error", error: error.message });
+        console.log(error); // Log error for debugging
+        res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
-})
+});
+
 
 profileRouter.patch('/change-password', userAuth, async (req, res) => {
     try {
         const currentUser = req.user;
-        const { password } = req.body;
-        updatePasswordValidation(password);
+        const { currentPass, newPass } = req.body;
 
-        const passwordHash = await bcrypt.hash(password, 10);
+        console.log('Received password update request:', { currentPass, newPass });
+
+        const isPasswordCorrect = await bcrypt.compare(currentPass, currentUser.password);
+        if (!isPasswordCorrect) {
+            return res.status(400).json({ message: "Current password is incorrect" });
+        }
+
+        const passwordHash = await bcrypt.hash(newPass, 10);
+
+        console.log('Password hash generated:', passwordHash);
 
         currentUser.password = passwordHash;
         await currentUser.save();
 
-        res.status(200).json({ message: `${currentUser.name}, Your Password has been changed successfully!`, user: currentUser })
+        console.log(`${currentUser.name} has successfully updated the password`);
 
+        res.status(200).json({ message: `${currentUser.name}, Your Password has been changed successfully!`, user: currentUser });
     } catch (error) {
         res.status(500).json({ message: "Error", error: error.message });
     }
-})
+});
 
-//We need to configure and add forgot password logic Here
 profileRouter.post('/forgot-password', async (req, res) => {
     try {
         const { email } = req.body;

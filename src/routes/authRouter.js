@@ -8,7 +8,6 @@ const authRouter = express.Router();
 authRouter.post('/signup', async (req, res) => {
 
     try {
-        console.log('Log12');
         signupValidation(req.body);
         const { name, email, password, age, gender } = req.body;
         const existedUser = await User.findOne({ email: email });
