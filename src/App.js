@@ -9,7 +9,7 @@ const jobRouter = require('./routes/jobRouter');
 
 const app = express();
 dotenv.config();
-const PORT = 3000 | process.env.PORT;
+const PORT = process.env.PORT || 3000;
 app.use(cors({
     origin: true,
     credentials: true
