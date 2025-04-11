@@ -29,6 +29,11 @@ authRouter.post('/signup', async (req, res) => {
         console.log('Log1');
 
         const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        res.cookie('token', token, {
+            httpOnly: true,
+            sameSite: 'Strict',
+            // secure: true, // Enable this in production (HTTPS only)
+        });
         console.log('Ttoken', token);
 
         res.status(200).json({ message: "User Created Successfully", user: user })
@@ -53,7 +58,7 @@ authRouter.post('/login', async (req, res) => {
             return res.status(404).json({ message: "Invalid Credentials" })
         }
 
-        const token = jwt.sign({ _id: user._id }, "Diwakar@123", { expiresIn: '1d' })
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
         console.log('Token', token)
         if (!token) {
             throw new Error("Error while Generating Token");
