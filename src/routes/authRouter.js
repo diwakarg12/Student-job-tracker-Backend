@@ -28,7 +28,7 @@ authRouter.post('/signup', async (req, res) => {
         await user.save();
         console.log('Log1');
 
-        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        const token = jwt.sign({ _id: user._id }, "Diwakar@123", { expiresIn: '1d' });
         res.cookie('token', token, {
             httpOnly: true,
             sameSite: 'Strict',
@@ -58,7 +58,7 @@ authRouter.post('/login', async (req, res) => {
             return res.status(404).json({ message: "Invalid Credentials" })
         }
 
-        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        const token = jwt.sign({ _id: user._id }, "Diwakar@123", { expiresIn: '1d' });
         console.log('Token', token)
         if (!token) {
             throw new Error("Error while Generating Token");
