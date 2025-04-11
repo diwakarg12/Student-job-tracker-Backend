@@ -10,7 +10,7 @@ const userAuth = async (req, res, next) => {
             return res.status(401).json({ message: "No token found, Please Login Again" });
         }
 
-        const decodedData = jwt.verify(token, process.env.JWT_SECRET);
+        const decodedData = jwt.verify(token, "Diwakar@123");
         const _id = decodedData._id;
 
         const user = await User.findById(_id);

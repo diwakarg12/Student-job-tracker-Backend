@@ -32,7 +32,7 @@ authRouter.post('/signup', async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             sameSite: 'Strict',
-            // secure: true, // Enable this in production (HTTPS only)
+            secure: true,
         });
         console.log('Ttoken', token);
 
@@ -68,6 +68,7 @@ authRouter.post('/login', async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             sameSite: 'Strict',
+            secure: true
         });
         res.status(200).json({ message: "Login Successfull", user: user })
 
