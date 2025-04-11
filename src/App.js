@@ -11,7 +11,7 @@ const app = express();
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 app.use(cors({
-    origin: true,
+    origin: "https://student-job-application-tracker.vercel.app/",
     credentials: true
 }));
 app.use(cookieParser());
